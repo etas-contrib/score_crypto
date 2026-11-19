@@ -33,6 +33,9 @@ _SOFTHSM_CACHE_ENTRIES = {
     "CMAKE_INSTALL_LIBDIR": "lib",
     "CMAKE_INSTALL_SYSCONFDIR": "etc",
     "CMAKE_INSTALL_LOCALSTATEDIR": "var",
+    # Ignore the host's pkg-config: a host openssl.pc adds -ldl to the OpenSSL libs, which QNX lacks,
+    # breaking SoftHSM's ECC try_run() probe. OpenSSL is found via OPENSSL_ROOT_DIR instead.
+    "CMAKE_DISABLE_FIND_PACKAGE_PkgConfig": "ON",
     # SoftHSM 2.7.0 uses try_run() to verify OpenSSL feature support.
     # try_run() cannot execute cross-compiled binaries on the build host;
     # cmake sets results to FAILED_TO_RUN in cross-compilation mode.
