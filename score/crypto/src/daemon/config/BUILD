@@ -27,6 +27,31 @@ generate_cpp(
     output = "crypto_config_generated.h",
 )
 
+# Generate and post-process JSON Schema from the .fbs in one step.
+# flatc --jsonschema rejects string default values ("Default values for strings and vectors are
+# not supported"), so the schema is generated from a temp copy with those defaults stripped.
+# The .fbs itself is unchanged, so runtime parsing behavior is unaffected.
+# flatc --jsonschema names the output after the input file: crypto_config.schema.json.
+# We pipe it directly into schema_generator (from score_baselibs 0.2.14+) to produce the final
+# draft-2020-12 schema.
+genrule(
+    name = "crypto_fbs_to_json_schema",
+    srcs = [":crypto_config_fbs_schema"],
+    outs = ["generated/crypto_config.schema.json"],
+    cmd = """
+        tmp=$$(mktemp -d) && \
+        sed -E 's/(string) = "[^"]*";/\\1;/' $(SRCS) > $$tmp/crypto_config.fbs && \
+        $(location @flatbuffers//:flatc) --jsonschema -o $$tmp $$tmp/crypto_config.fbs && \
+        $(location @score_baselibs//score/flatbuffers/bazel:schema_generator) --raw-schema $$tmp/crypto_config.schema.json --output $@
+    """,
+    tools = [
+        "@score_baselibs//score/flatbuffers/bazel:schema_generator",
+        "@flatbuffers//:flatc",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+
 # Configuration types and structures (headers only)
 cc_library(
     name = "config_types",

@@ -1,0 +1,53 @@
+{
+    "key_slot_config": {
+        "slot_entries": [
+            {
+                "slot_name": "vehicle/hmac-sha256",
+                "algorithm": "HMAC-SHA256",
+                "provider_names": ["OPENSSL"],
+                "allowed_operations": "MAC",
+                "allowed_uids": [0, 1000],
+                "allowed_write_uids": [0],
+                "deployment_path": "/opt/crypto/deploy/vehicle_hmac_sha256.kv",
+                "deployment_format": "kv"
+            },
+            {
+                "slot_name": "vehicle/aes-256-cmac",
+                "algorithm": "AES-256-CMAC",
+                "provider_names": ["OPENSSL"],
+                "allowed_operations": "MAC",
+                "allowed_uids": [0, 1000],
+                "allowed_write_uids": [0],
+                "deployment_path": "/opt/crypto/deploy/vehicle_aes256_cmac.kv",
+                "deployment_format": "kv"
+            },
+            {
+                "slot_name": "vehicle/hmac-sha256-hsm",
+                "algorithm": "HMAC-SHA256",
+                "provider_names": ["SOFTHSM"],
+                "allowed_operations": "MAC",
+                "allowed_uids": [0, 1000],
+                "allowed_write_uids": [0],
+                "deployment_path": "/opt/crypto/deploy/vehicle_hmac_sha256_hsm.kv",
+                "deployment_format": "kv"
+            }
+        ],
+        "app_resource_entries": [
+            {
+                "uid": 1000,
+                "app_resource_id": "vehicle/hmac",
+                "slot_name": "vehicle/hmac-sha256"
+            },
+            {
+                "uid": 1000,
+                "app_resource_id": "vehicle/cmac",
+                "slot_name": "vehicle/aes-256-cmac"
+            },
+            {
+                "uid": 1000,
+                "app_resource_id": "vehicle/hmac-hsm",
+                "slot_name": "vehicle/hmac-sha256-hsm"
+            }
+        ]
+    }
+}

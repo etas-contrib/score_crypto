@@ -23,6 +23,7 @@ def integration_test(
         file_pkgs = [],
         deps = [],
         extra_args = [],
+        runtime_files = [], # needed only to support file paths specific to VRTE crypto_daemon until we use the same.
         **kwargs):
     """Creates two integration test targets (py_itf_test).
 
@@ -44,6 +45,7 @@ def integration_test(
         libraries: List of libraries to be packaged into the deployment tarball (lib/).
         configs: List of configuration files to be packaged into the deployment tarball (etc/).
         file_pkgs: List of additional pkg files to be packaged into the deployment tarball (share/).
+        runtime_files: List of pkg files to be packaged at their declared paths in the deployment tarball.
         deps: List of dependencies for the test target.
         extra_args: List of additional command-line arguments to be passed to the test script.
         **kwargs: Additional keyword arguments to be passed to the py_itf_test rule.
@@ -86,7 +88,7 @@ def integration_test(
             ":libraries",
             ":config",
             ":file_pkgs",
-        ],
+        ] + runtime_files,
         testonly = True,
     )
 

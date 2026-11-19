@@ -277,6 +277,7 @@ bazel_dep(name = "score_platform", version = "0.7.6")
 
 # score baselibs
 bazel_dep(name = "score_baselibs", version = "0.2.18")
+bazel_dep(name = "flatbuffers", version = "25.12.19.bcr.1")  # same version score_baselibs pins; needed for @flatbuffers//:flatc
 
 # score communication
 bazel_dep(name = "score_communication", version = "0.6.0")
