@@ -177,6 +177,30 @@ table CertSlotConfig {
 }
 
 // ---------------------------------------------------------------------------
+// General daemon configuration
+// ---------------------------------------------------------------------------
+
+/// Daemon-wide resource quota limits. Mirrors ResourceQuotaPolicy
+table ResourceQuotaPolicy {
+  /// Maximum ephemeral keys allowed per client connection
+  max_ephemeral_keys_per_connection: uint32 = 32;
+  /// Maximum key slots that may be loaded per client connection
+  max_loaded_keys_per_connection: uint32 = 16;
+  /// Maximum aggregate key material size allowed by this policy, in bytes (default 4 MiB)
+  max_total_key_material_bytes: uint64 = 4194304;
+}
+
+/// General daemon configuration section. Mirrors GeneralConfig
+table GeneralConfig {
+  /// Daemon log level (default "info")
+  log_level: string = "info";
+  /// Maximum number of concurrent sessions (default 100)
+  max_sessions: uint32 = 100;
+  /// Daemon-wide resource quota policy
+  quota_policy: ResourceQuotaPolicy;
+}
+
+// ---------------------------------------------------------------------------
 // Top-level configuration root
 // ---------------------------------------------------------------------------
 
@@ -192,6 +216,7 @@ table CertSlotConfig {
 table CryptoConfig {
   key_slot_config: KeySlotConfig;
   cert_slot_config: CertSlotConfig;
+  general_config: GeneralConfig;
 }
 
 root_type CryptoConfig;
